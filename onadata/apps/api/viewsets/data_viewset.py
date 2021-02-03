@@ -589,12 +589,16 @@ Delete a specific submission in a form
         elif isinstance(self.object, Instance):
             if request.user.has_perm("change_xform", self.object.xform):
                 return_url = request.query_params.get('return_url')
+                view_only = (
+                    request.query_params.get('view_only', 'false').lower()
+                    == 'true'
+                )
                 if not return_url:
                     raise ParseError(_("return_url not provided."))
 
                 try:
                     data["url"] = get_enketo_edit_url(
-                        request, self.object, return_url)
+                        request, self.object, return_url, view_only=view_only)
                 except EnketoError as e:
                     data['detail'] = "{}".format(e)
             else:
