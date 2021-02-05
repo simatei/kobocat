@@ -176,7 +176,7 @@ def enketo_url(
     instance_id=None,
     return_url=None,
     instance_attachments=None,
-    view_only=False,
+    action=None,
 ):
 
     if not hasattr(settings, 'ENKETO_URL')\
@@ -207,8 +207,8 @@ def enketo_url(
 
     # The Ekento view-only endpoint differs to the edit by the addition of /view
     # as shown in the docs: https://apidocs.enketo.org/v2#/post-instance-view
-    if view_only:
-        url += '/view'
+    if action == 'view':
+        url = '{}/view'.format(url)
 
     req = requests.post(url, data=values,
                         auth=(settings.ENKETO_API_TOKEN, ''), verify=False)
@@ -268,13 +268,12 @@ def _get_form_url(username):
         username=username
     )
 
-
-def get_enketo_edit_url(request, instance, return_url, view_only=False):
+def get_enketo_submission_url(request, instance, return_url, action):
     form_url = _get_form_url(instance.xform.user.username)
     instance_attachments = image_urls_dict(instance)
     url = enketo_url(
         form_url, instance.xform.id_string, instance_xml=instance.xml,
         instance_id=instance.uuid, return_url=return_url,
-        instance_attachments=instance_attachments, view_only=view_only)
+        instance_attachments=instance_attachments, action=action)
     return url
 

@@ -292,7 +292,7 @@ class TestDataViewSet(TestBase):
                 response.data['url'],
                 "https://hmh2a.enketo.formhub.org")
 
-    def test_get_enketo_edit_url_view_only(self):
+    def test_get_enketo_view_url(self):
         self._make_submissions()
         view = DataViewSet.as_view({'get': 'enketo'})
         request = self.factory.get('/', **self.extra)
@@ -301,7 +301,7 @@ class TestDataViewSet(TestBase):
 
         request = self.factory.get(
             '/',
-            data={'return_url': "http://test.io/test_url", 'view_only': 'true'},
+            data={'return_url': "http://test.io/test_url", 'action': 'view'},
             **self.extra
         )
 
